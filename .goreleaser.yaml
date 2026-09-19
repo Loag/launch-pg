@@ -1,0 +1,48 @@
+# GoReleaser config: https://goreleaser.com/customization/
+# Local dry run:   goreleaser release --snapshot --clean
+# Validate:        goreleaser check
+version: 2
+
+project_name: launch-pg
+
+before:
+  hooks:
+    - go mod tidy
+    - go test ./...
+
+builds:
+  - id: launch-pg
+    main: ./cmd/launch-pg
+    binary: launch-pg
+    env:
+      # All dependencies are pure Go (go-keyring shells out to `security` on
+      # macOS and uses D-Bus on Linux), so static cross-compiles work.
+      - CGO_ENABLED=0
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+    flags:
+      - -trimpath
+    ldflags:
+      # main.version is what `launch-pg --version` and the TUI header show.
+      - -s -w -X main.version={{ .Version }}
+
+archives:
+  - formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: checksums.txt
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
