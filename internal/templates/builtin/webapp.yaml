@@ -1,0 +1,11 @@
+name: webapp
+description: Owner for migrations, a read-write app role, and a read-only role
+schema: public
+extensions: [pgcrypto]
+roles:
+  - suffix: owner
+    preset: owner
+  - suffix: app
+    preset: readwrite
+  - suffix: ro
+    preset: readonly

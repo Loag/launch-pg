@@ -1,0 +1,8 @@
+name: minimal
+description: Owner for migrations and a read-write app role
+schema: public
+roles:
+  - suffix: owner
+    preset: owner
+  - suffix: app
+    preset: readwrite

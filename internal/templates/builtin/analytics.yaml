@@ -1,0 +1,8 @@
+name: analytics
+description: Owner that loads data and a read-only role for querying
+schema: public
+roles:
+  - suffix: owner
+    preset: owner
+  - suffix: ro
+    preset: readonly
